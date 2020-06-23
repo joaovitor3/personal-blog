@@ -1,0 +1,136 @@
+# About the project
+&ensp;&ensp;&ensp;&ensp;The OpenStreetMap (OSM) project has established formal  Organised Editing Guidelines,
+which require all groups and organized activities of mapping on OpenStreetMap to report 
+transparently how they organize and what they are mapping on.<br></br>
+&ensp;&ensp;&ensp;&ensp;The Tasking Manager is the most used application in the OSM ecosystem 
+for volunteers, but also professionals, to 
+team up and coordinate mapping. In order to ease up the user experience of fulfilling 
+the guidelines for organized editing, the goal of my project this summer is to make the 
+process of reporting back data for OpenStreetMap automatically.
+
+# Project solutions
+&ensp;&ensp;&ensp;&ensp;In the first step, we started with an analysis of contents and fields 
+that are required or suggested by the organized editing guidelines, then we check whether 
+these are already available in the Tasking Manager, or not.<br></br>
+&ensp;&ensp;&ensp;&ensp;Then we implemented a small proof of concept for testing out how 
+the communication between Tasking Manager and OpenStreetMap should occur. Although the OSM’s organized editing 
+guidelines suggest the project wiki for reporting of organized mapping activities, we wanted to include 
+two technical ideas for this initial test:
+<ul>
+   <li>Report data directly to the OpenStreetMap wiki</li>
+   <li>Store files in a human-readable format in a git repository (GitHub, Gitlab, etc)</li>
+</ul> 
+&ensp;&ensp;&ensp;&ensp;We would like to have a broader conversation about the 
+benefits of each approach and we are planning 
+to reach out to OSM’s Data Working Group to ask for their feedback.
+
+## Wiki solution
+
+&ensp;&ensp;&ensp;&ensp;To report data directly to the OpenStreetMap wiki, we adapted the solution 
+currently used by OpenStreetMap to the requirements of the Tasking Manager, 
+which was basically to adjust the existing pages on the OpenStreetMap wiki to a new format. 
+This was done using a python library called wikitextparser, which converts a string to 
+wikitext (the file format used on the OpenStreetMap wiki).<br></br>
+&ensp;&ensp;&ensp;&ensp;For creating and editing the pages of a MediaWiki instance 
+(OpenStreetMap, Wikipedia, and others are examples of MediaWiki instances) we 
+used the MediaWiki API. Below is a very simple example of adding a table 
+in a wiki page via the Mediawiki API.
+
+```python
+import requests
+
+# Data of table to be added in the wiki page
+table_data = (
+   "{|class='wikitable sortable'\n"
+   "|-\n"
+   '! scope="col" | Name\n'
+   '! scope="col" | Link\n'
+   "|-\n"
+   "| Covid 19\n"
+   "| [[COVID19]]\n"
+   "|-\n"
+   "|}\n"
+)
+ 
+# params of request to create wiki page
+params = {
+   "action": "edit",
+   "title": "covid 19",
+   "createonly": "true",
+   "contentmodel": "wikitext",
+   "bot": "true",
+   "format": "json"
+}
+ 
+# request to create wiki page
+session = requests.Session()
+session.post(
+   url=WIKI_API_ENDPOINT,
+   params=params,
+   data={
+       "token": WIKI_API_TOKEN,
+       "text": table_data
+   }
+)
+```
+
+## Git solution
+
+&ensp;&ensp;&ensp;&ensp;To store files in a human-readable format, the python library 
+YAML was used, which converts YAML to other native python formats and vice versa. 
+To save and edit the YAML files in a git repository, the GitHub API was used. Below 
+is a code example that parses a python dictionary to a YAML file and saves it in a GitHub repository.
+```python
+import yaml
+import base64
+import requests
+import json
+ 
+# Data of the yaml file to be saved in the repo
+data = {
+   "project": {
+       "title": "Covid 19",
+   }
+}
+ 
+# parse json to yaml encoded in base64
+yaml_file = yaml.dump(data, allow_unicode=True)
+encoded_yaml_file = base64.b64encode(bytes(yaml_file, 'utf-8'))
+ 
+# request data in the format required by github API
+request_data = {
+   "committer": {
+       "name": GITHUB_COMMITER_NAME,
+       "email": GITHUB_COMMITER_EMAIL
+   },
+   "message": "Add project title",
+   "content": encoded_yaml_file.decode("utf-8")
+}
+ 
+# create yaml file in the root of repo
+requests.put(
+   "https://api.github.com/"
+   f"repos/{GITHUB_REPOSITORY}/contents/covid19_project.yaml",
+   headers={
+       "Content-Type": "application/json",
+       "Authorization": "Bearer " + GITHUB_API_TOKEN
+   },
+   data=json.dumps(request_data)
+)
+
+```
+
+# Missing fields
+
+&ensp;&ensp;&ensp;&ensp;Also, it was necessary to add the required or suggested 
+fields by the organized editing guidelines that were not included in the Tasking Manager. 
+Some of these fields are just waiting for the Pull Request approval for being added to 
+the Tasking Manager codebase, and the other ones that aren’t included in Pull Requests 
+are just waiting for the OSM’s Data Working Group feedback, if their inclusion is really necessary.
+
+# Conclusion
+
+&ensp;&ensp;&ensp;&ensp;The first month of GsoC has been an extraordinary experience. 
+I am acquiring a lot of knowledge in this short period of time. In addition, 
+I also see it as an excellent opportunity to apply all the content seen in the 
+subjects of the college. Stay tuned for the second evaluation post. See y’all!

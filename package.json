@@ -1,6 +1,7 @@
 {
   "name": "react-blog",
   "version": "1.0.0",
+  "homepage": "https://joaovitor3.github.io/personal-blog/",
   "private": true,
   "dependencies": {
     "blueimp-md5": "^2.3.0",
@@ -25,7 +26,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serve": "navi-scripts serve",
-    "deploy:prod": "netlify deploy --dir=build --prod"
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"

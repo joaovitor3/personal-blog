@@ -34,11 +34,10 @@ function BlogIndexPage({ blogRoot, pageCount, pageNumber, postRoutes }) {
           <Link href="https://github.com/joaovitor3" target="_blank">Github</Link> &bull; 
           <Link href="https://www.linkedin.com/in/jo%C3%A3o-vitor-r-souza/" target="_blank" >
             LinkedIn
-          </Link>&bull;
+          </Link>
           <Link href="/tags" style={{ float: 'right' }}
             >Tags
           </Link>{' '}
-          <a href="https://github.com/frontarm/create-react-blog">Source</a>
         </div>
       </footer>
     </div>
