@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[6],{52:function(e,t,n){"use strict";n.r(t),t.default={title:"My first month in Google Summer of Code 2020",tags:["GSoC","Humanitarian OpenStreetMap"],spoiler:"A little of my experience at GSoC 2020 with Humanitarian OpenStreetMap",getContent:()=>n.e(7).then(n.bind(null,50))}}}]);
+//# sourceMappingURL=6.91df7a2b.chunk.js.map
