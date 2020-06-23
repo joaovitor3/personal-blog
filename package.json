@@ -22,11 +22,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && navi-scripts build",
+    "build": "react-scripts build && mkdir build/personal-blog && mv build/static/ build/personal-blog",
+    "navi-build": "navi-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serve": "navi-scripts serve",
-    "predeploy": "yarn build",
+    "predeploy": "yarn build && yarn navi-build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
